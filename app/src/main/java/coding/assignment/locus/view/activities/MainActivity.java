@@ -108,9 +108,7 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
         
         DataModelBuilder commentBuilder1 = new DataModelBuilder()
                 .setViewType(ViewTypes.COMMENT)
-                .setTitle("Comment box 1")
                 .setId("comment_id")
-                .setTitle("This is sample comment 1")
                 .setDataMap(null);
         dataModels.add(commentBuilder1.createDataModel());
         
