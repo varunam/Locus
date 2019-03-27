@@ -1,8 +1,10 @@
 package coding.assignment.locus.view.adapters;
 
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +30,17 @@ import static coding.assignment.locus.view.ViewTypes.SINGLE_CHOICE;
  */
 public class LocusAdapter extends RecyclerView.Adapter<LocusAdapter.ViewHolder> {
     
+    private static final String TAG = LocusAdapter.class.getSimpleName();
     private List<DataModel> dataList;
+    private ImageClickedCallbacks imageClickedCallbacks;
     
     public void setDataList(ArrayList<DataModel> dataList) {
         this.dataList = dataList;
         notifyDataSetChanged();
+    }
+    
+    public LocusAdapter(@NonNull ImageClickedCallbacks imageClickedCallbacks) {
+        this.imageClickedCallbacks = imageClickedCallbacks;
     }
     
     @NonNull
@@ -64,10 +71,17 @@ public class LocusAdapter extends RecyclerView.Adapter<LocusAdapter.ViewHolder> 
         switch (dataModel.getViewType()) {
             case PHOTO:
                 viewHolder.photoTitle.setText(dataModel.getTitle());
+                if (dataModel.getImageBitmap() != null) {
+                    viewHolder.photoView.setImageBitmap(dataModel.getImageBitmap());
+                    Log.d(TAG,"Setting imageBitmap: " + dataModel.getImageBitmap());
+                }
                 viewHolder.photoView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(viewHolder.photoView.getContext(), "Hello", Toast.LENGTH_SHORT).show();
+                        if (dataModel.getImageBitmap() == null)
+                            imageClickedCallbacks.onImageClicked(position, false);
+                        else
+                            imageClickedCallbacks.onImageClicked(position, true);
                     }
                 });
                 break;
@@ -148,5 +162,11 @@ public class LocusAdapter extends RecyclerView.Adapter<LocusAdapter.ViewHolder> 
             commentBox = itemView.findViewById(R.id.comment_box_et_id);
             commentSwitch = itemView.findViewById(R.id.comment_switch_id);
         }
+    }
+    
+    public void setImageInItem(int position, Bitmap imageBitmap) {
+        DataModel dataModel = dataList.get(position);
+        dataModel.setImageBitmap(imageBitmap);
+        notifyDataSetChanged();
     }
 }

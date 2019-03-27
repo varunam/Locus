@@ -1,5 +1,7 @@
 package coding.assignment.locus.data.models;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by varun.am on 27/03/19
  */
@@ -9,6 +11,7 @@ public class DataModel {
     private String id;
     private String title;
     private DataMap dataMap;
+    private Bitmap imageBitmap;
     
     public DataModel(int viewType, String id, String title, DataMap dataMap) {
         this.viewType = viewType;
@@ -47,5 +50,13 @@ public class DataModel {
     
     public void setDataMap(DataMap dataMap) {
         this.dataMap = dataMap;
+    }
+    
+    public Bitmap getImageBitmap() {
+        return imageBitmap;
+    }
+    
+    public void setImageBitmap(Bitmap imageBitmap) {
+        this.imageBitmap = imageBitmap;
     }
 }
