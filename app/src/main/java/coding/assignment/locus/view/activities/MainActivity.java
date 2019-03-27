@@ -2,13 +2,9 @@ package coding.assignment.locus.view.activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -18,9 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.ArrayList;
 
 import coding.assignment.locus.R;
@@ -89,6 +84,34 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
                 .setTitle("This is sample comment")
                 .setDataMap(null);
         dataModels.add(commentBuilder.createDataModel());
+    
+        DataModelBuilder dataModelBuilder1 = new DataModelBuilder()
+                .setViewType(ViewTypes.PHOTO)
+                .setTitle("Photo Title 1")
+                .setId("photo_id")
+                .setDataMap(null);
+        dataModels.add(dataModelBuilder1.createDataModel());
+    
+        DataModelBuilder singleChoiceBuilder1 = new DataModelBuilder()
+                .setId("single_choice_id")
+                .setTitle("Single Choice Title 1")
+                .setViewType(ViewTypes.SINGLE_CHOICE)
+                .setDataMap(new DataMap(
+                        new Options(
+                                "Good 1",
+                                "Bad 1",
+                                "Worse 1"
+                        )
+                ));
+        dataModels.add(singleChoiceBuilder1.createDataModel());
+    
+        DataModelBuilder commentBuilder1 = new DataModelBuilder()
+                .setViewType(ViewTypes.COMMENT)
+                .setTitle("Comment box 1")
+                .setId("comment_id")
+                .setTitle("This is sample comment 1")
+                .setDataMap(null);
+        dataModels.add(commentBuilder1.createDataModel());
         
         return dataModels;
     }
@@ -97,25 +120,27 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
     protected void onResume() {
         super.onResume();
         if (!cameraPermissionGiven())
-            requestCameraPermission();
+            requestPermissions();
     }
     
     private boolean cameraPermissionGiven() {
         return ContextCompat.checkSelfPermission(LocusApplication.getAppContext(), Manifest.permission.CAMERA) ==
-                PackageManager.PERMISSION_GRANTED;
+                PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(LocusApplication.getAppContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                        PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(LocusApplication.getAppContext(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                        PackageManager.PERMISSION_GRANTED;
     }
     
-    private void requestCameraPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, PERMISSIONS_REQUEST);
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST);
     }
     
     private void onCaptureImageResult(Intent data) {
-        
         Bundle extras = data.getExtras();
         Bitmap imageBitmap = (Bitmap) extras.get("data");
-        Log.d(TAG,"sending bitmap: " + imageBitmap);
+        Log.d(TAG, "sending bitmap: " + imageBitmap);
         locusAdapter.setImageInItem(position, imageBitmap);
-        
     }
     
     @Override
@@ -130,34 +155,15 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
         }
     }
     
-    public Uri getImageUri(Context inContext, Bitmap inImage, String imageName) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, imageName, null);
-        return Uri.parse(path);
-    }
-    
-    public String getRealPathFromURI(Uri uri) {
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-        return cursor.getString(idx);
-    }
-    
-    public Bitmap convertSrcToBitmap(String imageSrc) {
-        Bitmap myBitmap = null;
-        File imgFile = new File(imageSrc);
-        if (imgFile.exists()) {
-            myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-        }
-        return myBitmap;
-    }
-    
     @Override
     public void onImageClicked(int position, boolean imageLoaded) {
-        openCamera();
-        this.position = position;
-        Log.d(TAG, "Image clicked at " + position + " where imageLocaded: " + imageLoaded);
+        if (!imageLoaded) {
+            openCamera();
+            this.position = position;
+            Log.d(TAG, "Image clicked at " + position + " where imageLocaded: " + imageLoaded);
+        } else {
+            Toast.makeText(getApplicationContext(), "Already loaded", Toast.LENGTH_LONG).show();
+        }
     }
     
     public void openCamera() {
