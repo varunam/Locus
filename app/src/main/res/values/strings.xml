@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Locus</string>
+    <string name="option_1">Option One</string>
+    <string name="comment">Comment</string>
+    <string name="provide_comment">Provide comment</string>
 </resources>
