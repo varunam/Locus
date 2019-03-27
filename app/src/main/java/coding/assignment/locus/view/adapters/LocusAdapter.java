@@ -58,8 +58,8 @@ public class LocusAdapter extends RecyclerView.Adapter<LocusAdapter.ViewHolder> 
     }
     
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int position) {
-        DataModel dataModel = dataList.get(position);
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
+        final DataModel dataModel = dataList.get(position);
         
         switch (dataModel.getViewType()) {
             case PHOTO:
@@ -78,6 +78,17 @@ public class LocusAdapter extends RecyclerView.Adapter<LocusAdapter.ViewHolder> 
                 viewHolder.optionThree.setText(dataModel.getDataMap().getOptions().getOption3());
                 break;
             case COMMENT:
+                viewHolder.commentSwitch.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (viewHolder.commentSwitch.isChecked()) {
+                            dataModel.setTitle("Enter your comment here...");
+                        } else {
+                            dataModel.setTitle("");
+                        }
+                        notifyItemChanged(position);
+                    }
+                });
                 if (TextUtils.isEmpty(dataModel.getTitle())) {
                     viewHolder.commentSwitch.setChecked(false);
                     viewHolder.commentBox.setVisibility(View.GONE);
