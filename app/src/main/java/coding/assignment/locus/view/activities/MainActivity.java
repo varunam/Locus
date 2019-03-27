@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -27,6 +26,8 @@ import coding.assignment.locus.data.models.Options;
 import coding.assignment.locus.view.ViewTypes;
 import coding.assignment.locus.view.adapters.ImageClickedCallbacks;
 import coding.assignment.locus.view.adapters.LocusAdapter;
+
+import static coding.assignment.locus.view.activities.FullScreenImageActivity.IMAGE_MAP_KEY;
 
 public class MainActivity extends AppCompatActivity implements ImageClickedCallbacks {
     
@@ -84,14 +85,14 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
                 .setTitle("This is sample comment")
                 .setDataMap(null);
         dataModels.add(commentBuilder.createDataModel());
-    
+        
         DataModelBuilder dataModelBuilder1 = new DataModelBuilder()
                 .setViewType(ViewTypes.PHOTO)
                 .setTitle("Photo Title 1")
                 .setId("photo_id")
                 .setDataMap(null);
         dataModels.add(dataModelBuilder1.createDataModel());
-    
+        
         DataModelBuilder singleChoiceBuilder1 = new DataModelBuilder()
                 .setId("single_choice_id")
                 .setTitle("Single Choice Title 1")
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
                         )
                 ));
         dataModels.add(singleChoiceBuilder1.createDataModel());
-    
+        
         DataModelBuilder commentBuilder1 = new DataModelBuilder()
                 .setViewType(ViewTypes.COMMENT)
                 .setTitle("Comment box 1")
@@ -156,13 +157,15 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
     }
     
     @Override
-    public void onImageClicked(int position, boolean imageLoaded) {
-        if (!imageLoaded) {
+    public void onImageClicked(int position, Bitmap loadedImageBitmap) {
+        if (loadedImageBitmap == null) {
             openCamera();
             this.position = position;
-            Log.d(TAG, "Image clicked at " + position + " where imageLocaded: " + imageLoaded);
+            Log.d(TAG, "Image clicked at " + position + " where imageBitmap: " + loadedImageBitmap);
         } else {
-            Toast.makeText(getApplicationContext(), "Already loaded", Toast.LENGTH_LONG).show();
+            Intent fullScreenIntent = new Intent(this, FullScreenImageActivity.class);
+            fullScreenIntent.putExtra(IMAGE_MAP_KEY, loadedImageBitmap);
+            startActivity(fullScreenIntent);
         }
     }
     

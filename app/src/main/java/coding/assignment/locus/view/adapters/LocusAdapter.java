@@ -73,15 +73,12 @@ public class LocusAdapter extends RecyclerView.Adapter<LocusAdapter.ViewHolder> 
                 viewHolder.photoTitle.setText(dataModel.getTitle());
                 if (dataModel.getImageBitmap() != null) {
                     viewHolder.photoView.setImageBitmap(dataModel.getImageBitmap());
-                    Log.d(TAG,"Setting imageBitmap: " + dataModel.getImageBitmap());
+                    Log.d(TAG, "Setting imageBitmap: " + dataModel.getImageBitmap());
                 }
                 viewHolder.photoView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (dataModel.getImageBitmap() == null)
-                            imageClickedCallbacks.onImageClicked(position, false);
-                        else
-                            imageClickedCallbacks.onImageClicked(position, true);
+                        imageClickedCallbacks.onImageClicked(position, dataModel.getImageBitmap());
                     }
                 });
                 break;
