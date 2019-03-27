@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
     private LocusAdapter locusAdapter;
     
     private static final int PERMISSIONS_REQUEST = 101;
+    private static final int CAMERA_OPEN_REQUEST = 100;
     private int position = -1;
     
     @Override
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != Activity.RESULT_CANCELED) {
-            if (data != null && requestCode == 100) {
+            if (data != null && requestCode == CAMERA_OPEN_REQUEST) {
                 onCaptureImageResult(data);
             }
         } else {
@@ -169,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
     
     public void openCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, 100);
+        startActivityForResult(intent, CAMERA_OPEN_REQUEST);
         Log.d(TAG, "Opening camera");
     }
 }
