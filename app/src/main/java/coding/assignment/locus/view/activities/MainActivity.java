@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import coding.assignment.locus.R;
 import coding.assignment.locus.application.LocusApplication;
+import coding.assignment.locus.data.DataFactory;
 import coding.assignment.locus.data.models.DataMap;
 import coding.assignment.locus.data.models.DataModel;
 import coding.assignment.locus.data.models.DataModelBuilder;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
         locusAdapter = new LocusAdapter(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(locusAdapter);
-        locusAdapter.setDataList(getDummyData());
+        locusAdapter.setDataList(DataFactory.getInputFromJson());
     }
     
     private ArrayList<DataModel> getDummyData() {
@@ -157,9 +158,9 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
     
     @Override
     public void onImageClicked(int position, Bitmap loadedImageBitmap) {
+        this.position = position;
         if (loadedImageBitmap == null) {
             openCamera();
-            this.position = position;
             Log.d(TAG, "Image clicked at " + position + " where imageBitmap: " + loadedImageBitmap);
         } else {
             Intent fullScreenIntent = new Intent(this, FullScreenImageActivity.class);
