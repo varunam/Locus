@@ -67,6 +67,10 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
             requestPermissions();
     }
     
+    /**
+     * checking if all the required permissions are given
+     * @return
+     */
     private boolean cameraPermissionGiven() {
         return ContextCompat.checkSelfPermission(LocusApplication.getAppContext(), Manifest.permission.CAMERA) ==
                 PackageManager.PERMISSION_GRANTED &&
@@ -106,6 +110,9 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
         }
     }
     
+    /**
+     * opening camera with action to store taken image.
+     */
     private void openCamera() {
         Intent pictureIntent = new Intent(
                 MediaStore.ACTION_IMAGE_CAPTURE);
@@ -146,6 +153,9 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
         return super.onOptionsItemSelected(item);
     }
     
+    /**
+     * toasting and logging image storage path.
+     */
     private void logImagesPath() {
         Toast.makeText(getApplicationContext(), "Images are stored at " + Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + LOCUS_IMAGES, Toast.LENGTH_SHORT).show();
         Log.d(TAG, "Images are stored in the path: " + ImageUtils.getImagespath());

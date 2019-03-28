@@ -24,6 +24,10 @@ public class DataFactory {
     
     private static final String TAG = DataFactory.class.getSimpleName();
     
+    /**
+     * json file will be read as string and then will be parsed to list of datamodel objects.
+     * @return returning the list of datamodels.
+     */
     public static ArrayList<DataModel> getInputFromJson() {
         String jsonArrayString = getInputArrayFromAssets();
         ArrayList<DataModel> dataModels = new ArrayList<>();
@@ -61,6 +65,11 @@ public class DataFactory {
         return dataModels;
     }
     
+    /**
+     * method to get viewtype int from string
+     * @param type - viewtype in string
+     * @return
+     */
     private static int getViewTypeInt(String type) {
         switch (type) {
             case ViewTypes.PHOTO_S:
@@ -74,6 +83,10 @@ public class DataFactory {
         }
     }
     
+    /**
+     * getting json from asset folder
+     * @return - data will be returned in string
+     */
     private static String getInputArrayFromAssets() {
         String jsonArray = null;
         try {
@@ -89,6 +102,10 @@ public class DataFactory {
         return jsonArray;
     }
     
+    /**
+     * dummy data for test purpose
+     * @return
+     */
     private static ArrayList<DataModel> getDummyData() {
         ArrayList<DataModel> dataModels = new ArrayList<>();
         

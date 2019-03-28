@@ -19,7 +19,7 @@ public class ImageUtils {
     /**
      * creating image file.
      *
-     * @return
+     * @return - created file
      * @throws IOException
      */
     public static File createImageFile() throws IOException {
