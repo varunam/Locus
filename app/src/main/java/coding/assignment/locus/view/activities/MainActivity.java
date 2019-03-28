@@ -14,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import coding.assignment.locus.R;
 import coding.assignment.locus.application.LocusApplication;
@@ -108,5 +110,28 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, CAMERA_OPEN_REQUEST);
         Log.d(TAG, "Opening camera");
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.submit_menu, menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.submit_menu_id:
+                logImagesPath();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    
+    private void logImagesPath() {
+        Log.d(TAG, "Images are stored in the path: " + ImageUtils.getImagespath());
+        Log.d(TAG, "Individual path will be logged on taking the image itself");
     }
 }

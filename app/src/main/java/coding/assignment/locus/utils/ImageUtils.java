@@ -21,6 +21,7 @@ import coding.assignment.locus.application.LocusApplication;
 public class ImageUtils {
     
     private static final String TAG = ImageUtils.class.getSimpleName();
+    private static final String LOCUS_IMAGES = "LocusImages";
     
     private static Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -45,7 +46,7 @@ public class ImageUtils {
     
     public static File getImageStoredPath(Bitmap bm) {
         Log.d(TAG, "getImagePath");
-        final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/LocusImages";
+        final String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + LOCUS_IMAGES;
         File dir = new File(dirPath);
         if (!dir.exists())
             dir.mkdirs();
@@ -60,6 +61,10 @@ public class ImageUtils {
         }
         Log.d(TAG, "Returning file at " + file.getAbsolutePath());
         return file;
+    }
+    
+    public static String getImagespath() {
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + LOCUS_IMAGES;
     }
     
 }
