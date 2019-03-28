@@ -71,10 +71,23 @@ public class LocusAdapter extends RecyclerView.Adapter<LocusAdapter.ViewHolder> 
         switch (dataModel.getViewType()) {
             case PHOTO:
                 viewHolder.photoTitle.setText(dataModel.getTitle());
+                
                 if (dataModel.getImageBitmap() != null) {
                     viewHolder.photoView.setImageBitmap(dataModel.getImageBitmap());
+                    viewHolder.closeImageIcon.setVisibility(View.VISIBLE);
                     Log.d(TAG, "Setting imageBitmap: " + dataModel.getImageBitmap());
+                } else {
+                    viewHolder.closeImageIcon.setVisibility(View.GONE);
+                    viewHolder.photoView.setImageDrawable(viewHolder.photoView.getContext().getResources().getDrawable(R.drawable.ic_camera));
                 }
+                
+                viewHolder.closeImageIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dataModel.setImageBitmap(null);
+                        notifyItemChanged(position);
+                    }
+                });
                 viewHolder.photoView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -138,6 +151,7 @@ public class LocusAdapter extends RecyclerView.Adapter<LocusAdapter.ViewHolder> 
         
         private ImageView photoView;
         private TextView photoTitle;
+        private ImageView closeImageIcon;
         
         private RadioButton optionOne, optionTwo, optionThree;
         private TextView optionsTitle;
@@ -150,6 +164,7 @@ public class LocusAdapter extends RecyclerView.Adapter<LocusAdapter.ViewHolder> 
             
             photoView = itemView.findViewById(R.id.photo_id);
             photoTitle = itemView.findViewById(R.id.photo_title_id);
+            closeImageIcon = itemView.findViewById(R.id.close_photo_id);
             
             optionOne = itemView.findViewById(R.id.option_one_id);
             optionTwo = itemView.findViewById(R.id.option_two_id);
