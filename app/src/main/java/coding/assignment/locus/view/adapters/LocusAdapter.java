@@ -1,6 +1,6 @@
 package coding.assignment.locus.view.adapters;
 
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -72,10 +72,10 @@ public class LocusAdapter extends RecyclerView.Adapter<LocusAdapter.ViewHolder> 
             case PHOTO:
                 viewHolder.photoTitle.setText(dataModel.getTitle());
                 
-                if (dataModel.getImageBitmap() != null) {
-                    viewHolder.photoView.setImageBitmap(dataModel.getImageBitmap());
+                if (dataModel.getImageFilePath() != null) {
+                    viewHolder.photoView.setImageURI(Uri.parse(dataModel.getImageFilePath()));
                     viewHolder.closeImageIcon.setVisibility(View.VISIBLE);
-                    Log.d(TAG, "Setting imageBitmap: " + dataModel.getImageBitmap());
+                    Log.d(TAG, "Setting imageBitmap: " + dataModel.getImageFilePath());
                 } else {
                     viewHolder.closeImageIcon.setVisibility(View.GONE);
                     viewHolder.photoView.setImageDrawable(viewHolder.photoView.getContext().getResources().getDrawable(R.drawable.ic_camera));
@@ -84,14 +84,14 @@ public class LocusAdapter extends RecyclerView.Adapter<LocusAdapter.ViewHolder> 
                 viewHolder.closeImageIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        dataModel.setImageBitmap(null);
+                        dataModel.setImageFilePath(null);
                         notifyItemChanged(position);
                     }
                 });
                 viewHolder.photoView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        imageClickedCallbacks.onImageClicked(position, dataModel.getImageBitmap());
+                        imageClickedCallbacks.onImageClicked(position, dataModel.getImageFilePath());
                     }
                 });
                 break;
@@ -176,9 +176,9 @@ public class LocusAdapter extends RecyclerView.Adapter<LocusAdapter.ViewHolder> 
         }
     }
     
-    public void setImageInItem(int position, Bitmap imageBitmap) {
+    public void setImageInItem(int position, String imageFilePath) {
         DataModel dataModel = dataList.get(position);
-        dataModel.setImageBitmap(imageBitmap);
+        dataModel.setImageFilePath(imageFilePath);
         notifyDataSetChanged();
     }
 }

@@ -1,21 +1,26 @@
 package coding.assignment.locus.view.activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.IOException;
 
 import coding.assignment.locus.R;
 import coding.assignment.locus.application.LocusApplication;
@@ -24,6 +29,7 @@ import coding.assignment.locus.utils.ImageUtils;
 import coding.assignment.locus.view.adapters.ImageClickedCallbacks;
 import coding.assignment.locus.view.adapters.LocusAdapter;
 
+import static coding.assignment.locus.utils.ImageUtils.LOCUS_IMAGES;
 import static coding.assignment.locus.view.activities.FullScreenImageActivity.IMAGE_MAP_KEY;
 
 public class MainActivity extends AppCompatActivity implements ImageClickedCallbacks {
@@ -35,12 +41,12 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
     private static final int PERMISSIONS_REQUEST = 101;
     private static final int CAMERA_OPEN_REQUEST = 100;
     private int position = -1;
+    private String imageFilePath = null;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
         
         init();
     }
@@ -73,43 +79,50 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST);
     }
     
-    private void onCaptureImageResult(Intent data) {
-        Bundle extras = data.getExtras();
-        Bitmap imageBitmap = (Bitmap) extras.get("data");
-        Log.d(TAG, "Image stored: " + ImageUtils.getImageStoredPath(imageBitmap));
-        Log.d(TAG, "sending bitmap: " + imageBitmap + " to position: " + position);
-        locusAdapter.setImageInItem(position, imageBitmap);
-    }
-    
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_CANCELED) {
-            if (data != null && requestCode == CAMERA_OPEN_REQUEST) {
-                onCaptureImageResult(data);
-            }
-        } else {
-            Log.d(TAG, "Activity cancelled");
+        if (resultCode == RESULT_OK && requestCode == CAMERA_OPEN_REQUEST && imageFilePath != null) {
+            locusAdapter.setImageInItem(position, imageFilePath);
+            imageFilePath = null;
+        } else if (resultCode == RESULT_CANCELED) {
+            imageFilePath = null;
         }
     }
     
     @Override
-    public void onImageClicked(int position, Bitmap loadedImageBitmap) {
+    public void onImageClicked(int position, String imageFilePath) {
         this.position = position;
-        if (loadedImageBitmap == null) {
+        if (imageFilePath == null) {
             openCamera();
-            Log.d(TAG, "Image clicked at " + position + " where imageBitmap: " + loadedImageBitmap);
+            Log.d(TAG, "Image clicked at " + position + " where imageBitmap: " + imageFilePath);
         } else {
             Intent fullScreenIntent = new Intent(this, FullScreenImageActivity.class);
-            fullScreenIntent.putExtra(IMAGE_MAP_KEY, loadedImageBitmap);
+            fullScreenIntent.putExtra(IMAGE_MAP_KEY, imageFilePath);
             startActivity(fullScreenIntent);
         }
     }
     
-    public void openCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA_OPEN_REQUEST);
-        Log.d(TAG, "Opening camera");
+    private void openCamera() {
+        Intent pictureIntent = new Intent(
+                MediaStore.ACTION_IMAGE_CAPTURE);
+        if (pictureIntent.resolveActivity(getPackageManager()) != null) {
+            //Create a file to store the image
+            File photoFile = null;
+            try {
+                photoFile = ImageUtils.createImageFile();
+                imageFilePath = photoFile.getAbsolutePath();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this, getPackageName() + ".provider", photoFile);
+                pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        photoURI);
+                startActivityForResult(pictureIntent,
+                        CAMERA_OPEN_REQUEST);
+            }
+        }
     }
     
     @Override
@@ -123,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
         switch (item.getItemId()) {
             case R.id.submit_menu_id:
                 logImagesPath();
+                Toast.makeText(getApplicationContext(), "Images are stored at " + Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + LOCUS_IMAGES, Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;

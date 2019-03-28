@@ -1,6 +1,6 @@
 package coding.assignment.locus.view.activities;
 
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
@@ -19,8 +19,8 @@ public class FullScreenImageActivity extends AppCompatActivity {
         
         init();
     
-        Bitmap imageBitmap = getIntent().getParcelableExtra(IMAGE_MAP_KEY);
-        fullscreenImage.setImageBitmap(imageBitmap);
+        String imagePath = getIntent().getStringExtra(IMAGE_MAP_KEY);
+        fullscreenImage.setImageURI(Uri.parse(imagePath));
     }
     
     private void init() {
