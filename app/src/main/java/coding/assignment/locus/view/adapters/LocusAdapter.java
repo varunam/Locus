@@ -149,7 +149,7 @@ public class LocusAdapter extends RecyclerView.Adapter<LocusAdapter.ViewHolder> 
     
     public class ViewHolder extends RecyclerView.ViewHolder {
         
-        private ImageView photoView;
+        public ImageView photoView;
         private TextView photoTitle;
         private ImageView closeImageIcon;
         

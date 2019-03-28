@@ -8,6 +8,7 @@
     <ImageView
         android:id="@+id/full_screen_image_id"
         android:layout_width="match_parent"
+        android:transitionName="@string/image_transition"
         android:layout_height="match_parent" />
 
 </RelativeLayout>

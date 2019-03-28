@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -99,7 +100,9 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
         } else {
             Intent fullScreenIntent = new Intent(this, FullScreenImageActivity.class);
             fullScreenIntent.putExtra(IMAGE_MAP_KEY, imageFilePath);
-            startActivity(fullScreenIntent);
+            ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation(this, ((LocusAdapter.ViewHolder)recyclerView.findViewHolderForAdapterPosition(position)).photoView, getResources().getString(R.string.image_transition));
+            startActivity(fullScreenIntent, options.toBundle());
         }
     }
     
@@ -136,7 +139,6 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
         switch (item.getItemId()) {
             case R.id.submit_menu_id:
                 logImagesPath();
-                Toast.makeText(getApplicationContext(), "Images are stored at " + Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + LOCUS_IMAGES, Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
@@ -145,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
     }
     
     private void logImagesPath() {
+        Toast.makeText(getApplicationContext(), "Images are stored at " + Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + LOCUS_IMAGES, Toast.LENGTH_SHORT).show();
         Log.d(TAG, "Images are stored in the path: " + ImageUtils.getImagespath());
         Log.d(TAG, "Individual path will be logged on taking the image itself");
     }

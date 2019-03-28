@@ -3,6 +3,7 @@ package coding.assignment.locus.view.activities;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
 import android.widget.ImageView;
 
 import coding.assignment.locus.R;
@@ -15,10 +16,12 @@ public class FullScreenImageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_full_screen_image);
         
         init();
-    
+        
         String imagePath = getIntent().getStringExtra(IMAGE_MAP_KEY);
         fullscreenImage.setImageURI(Uri.parse(imagePath));
     }
