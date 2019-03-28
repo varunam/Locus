@@ -18,10 +18,18 @@ public class LocusApplication extends Application {
         application = this;
     }
     
+    /**
+     * method to get applicationContext throught the app
+     * @return
+     */
     public static Context getAppContext() {
         return appContext;
     }
     
+    /**
+     * method to get application instance
+     * @return
+     */
     public static Application getApplication() {
         return application;
     }
