@@ -88,4 +88,64 @@ public class DataFactory {
         }
         return jsonArray;
     }
+    
+    private static ArrayList<DataModel> getDummyData() {
+        ArrayList<DataModel> dataModels = new ArrayList<>();
+        
+        DataModelBuilder dataModelBuilder = new DataModelBuilder()
+                .setViewType(ViewTypes.PHOTO)
+                .setTitle("Photo Title")
+                .setId("photo_id")
+                .setDataMap(null);
+        dataModels.add(dataModelBuilder.createDataModel());
+        
+        DataModelBuilder singleChoiceBuilder = new DataModelBuilder()
+                .setId("single_choice_id")
+                .setTitle("Single Choice Title")
+                .setViewType(ViewTypes.SINGLE_CHOICE)
+                .setDataMap(new DataMap(
+                        new Options(
+                                "Good",
+                                "Bad",
+                                "Worse"
+                        )
+                ));
+        dataModels.add(singleChoiceBuilder.createDataModel());
+        
+        DataModelBuilder commentBuilder = new DataModelBuilder()
+                .setViewType(ViewTypes.COMMENT)
+                .setTitle("Comment boxX")
+                .setId("comment_id")
+                .setTitle("This is sample comment")
+                .setDataMap(null);
+        dataModels.add(commentBuilder.createDataModel());
+        
+        DataModelBuilder dataModelBuilder1 = new DataModelBuilder()
+                .setViewType(ViewTypes.PHOTO)
+                .setTitle("Photo Title 1")
+                .setId("photo_id")
+                .setDataMap(null);
+        dataModels.add(dataModelBuilder1.createDataModel());
+        
+        DataModelBuilder singleChoiceBuilder1 = new DataModelBuilder()
+                .setId("single_choice_id")
+                .setTitle("Single Choice Title 1")
+                .setViewType(ViewTypes.SINGLE_CHOICE)
+                .setDataMap(new DataMap(
+                        new Options(
+                                "Good 1",
+                                "Bad 1",
+                                "Worse 1"
+                        )
+                ));
+        dataModels.add(singleChoiceBuilder1.createDataModel());
+        
+        DataModelBuilder commentBuilder1 = new DataModelBuilder()
+                .setViewType(ViewTypes.COMMENT)
+                .setId("comment_id")
+                .setDataMap(null);
+        dataModels.add(commentBuilder1.createDataModel());
+        
+        return dataModels;
+    }
 }

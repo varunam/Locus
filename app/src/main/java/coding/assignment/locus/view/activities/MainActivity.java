@@ -15,16 +15,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import java.util.ArrayList;
-
 import coding.assignment.locus.R;
 import coding.assignment.locus.application.LocusApplication;
 import coding.assignment.locus.data.DataFactory;
-import coding.assignment.locus.data.models.DataMap;
-import coding.assignment.locus.data.models.DataModel;
-import coding.assignment.locus.data.models.DataModelBuilder;
-import coding.assignment.locus.data.models.Options;
-import coding.assignment.locus.view.ViewTypes;
+import coding.assignment.locus.utils.ImageUtils;
 import coding.assignment.locus.view.adapters.ImageClickedCallbacks;
 import coding.assignment.locus.view.adapters.LocusAdapter;
 
@@ -57,66 +51,6 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
         locusAdapter.setDataList(DataFactory.getInputFromJson());
     }
     
-    private ArrayList<DataModel> getDummyData() {
-        ArrayList<DataModel> dataModels = new ArrayList<>();
-        
-        DataModelBuilder dataModelBuilder = new DataModelBuilder()
-                .setViewType(ViewTypes.PHOTO)
-                .setTitle("Photo Title")
-                .setId("photo_id")
-                .setDataMap(null);
-        dataModels.add(dataModelBuilder.createDataModel());
-        
-        DataModelBuilder singleChoiceBuilder = new DataModelBuilder()
-                .setId("single_choice_id")
-                .setTitle("Single Choice Title")
-                .setViewType(ViewTypes.SINGLE_CHOICE)
-                .setDataMap(new DataMap(
-                        new Options(
-                                "Good",
-                                "Bad",
-                                "Worse"
-                        )
-                ));
-        dataModels.add(singleChoiceBuilder.createDataModel());
-        
-        DataModelBuilder commentBuilder = new DataModelBuilder()
-                .setViewType(ViewTypes.COMMENT)
-                .setTitle("Comment boxX")
-                .setId("comment_id")
-                .setTitle("This is sample comment")
-                .setDataMap(null);
-        dataModels.add(commentBuilder.createDataModel());
-        
-        DataModelBuilder dataModelBuilder1 = new DataModelBuilder()
-                .setViewType(ViewTypes.PHOTO)
-                .setTitle("Photo Title 1")
-                .setId("photo_id")
-                .setDataMap(null);
-        dataModels.add(dataModelBuilder1.createDataModel());
-        
-        DataModelBuilder singleChoiceBuilder1 = new DataModelBuilder()
-                .setId("single_choice_id")
-                .setTitle("Single Choice Title 1")
-                .setViewType(ViewTypes.SINGLE_CHOICE)
-                .setDataMap(new DataMap(
-                        new Options(
-                                "Good 1",
-                                "Bad 1",
-                                "Worse 1"
-                        )
-                ));
-        dataModels.add(singleChoiceBuilder1.createDataModel());
-        
-        DataModelBuilder commentBuilder1 = new DataModelBuilder()
-                .setViewType(ViewTypes.COMMENT)
-                .setId("comment_id")
-                .setDataMap(null);
-        dataModels.add(commentBuilder1.createDataModel());
-        
-        return dataModels;
-    }
-    
     @Override
     protected void onResume() {
         super.onResume();
@@ -140,7 +74,8 @@ public class MainActivity extends AppCompatActivity implements ImageClickedCallb
     private void onCaptureImageResult(Intent data) {
         Bundle extras = data.getExtras();
         Bitmap imageBitmap = (Bitmap) extras.get("data");
-        Log.d(TAG, "sending bitmap: " + imageBitmap);
+        Log.d(TAG, "Image stored: " + ImageUtils.getImageStoredPath(imageBitmap));
+        Log.d(TAG, "sending bitmap: " + imageBitmap + " to position: " + position);
         locusAdapter.setImageInItem(position, imageBitmap);
     }
     
